@@ -28,6 +28,7 @@ def getUserProfile(request):
     serializers = UserSerializer(user, many=False)
     return Response(serializers.data)
 
+
 @api_view(['POST'])
 def registerUser(request):
     data = request.data
@@ -45,23 +46,23 @@ def registerUser(request):
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def getUsers(request):
-    users = User.objects.all()
-    serializers = UserSerializer(users, many=True)
-    return Response(serializers.data)
-
-
-@api_view(['GET'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def getUserProfile(request):
+def updateUserProfile(request):
     user = request.user
 
-    serializers = UserSerializer(user, many=False)
+    serializers = UserSerializerWithToken(user, many=False)
+
+    data = request.data
+    user.first_name = data['name']
+    user.username = data['email']
+    user.email = data['email']
+
+    if data['password'] != '':
+        user.password = make_password(data['password'])
+
+    user.save()
+
     return Response(serializers.data)
 
 
