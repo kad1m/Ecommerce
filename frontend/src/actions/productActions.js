@@ -9,7 +9,7 @@ import {
 } from "../constants/productConstans";
 import axios from "axios";
 
-
+  //"proxy": "http://127.0.0.1:8000",
 export const listProducts = () => async (dispatch) => {
     try {
         dispatch({type: PRODUCT_LIST_REQUEST})
