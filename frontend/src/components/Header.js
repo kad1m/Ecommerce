@@ -68,7 +68,26 @@ const Header = () => {
                                 </LinkContainer>
                             </Nav.Item>
                         )}
+                        {userInfo && userInfo.isAdmin && (
+                          <NavDropdown title={'Admin panel'} id="admin">
+                                <LinkContainer to='/admin/userlist'>
+                                    <NavDropdown.Item>
+                                        Users list
+                                    </NavDropdown.Item>
+                                </LinkContainer>
+                              <LinkContainer to='/admin/productlist'>
+                                    <NavDropdown.Item>
+                                        Products list
+                                    </NavDropdown.Item>
+                                </LinkContainer>
+                              <LinkContainer to='/admin/orderlist'>
+                                    <NavDropdown.Item>
+                                        Orders list
+                                    </NavDropdown.Item>
+                                </LinkContainer>
+                            </NavDropdown>
 
+                        )}
 
                     </Nav>
                     <Form className="d-flex">
