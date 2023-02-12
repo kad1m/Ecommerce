@@ -51,7 +51,7 @@ const UserUpdateScreen = () => {
 
   return (
     <div>
-      <Link to='/admin/users'>
+      <Link to='/admin/userlist'>
         Go back
       </Link>
       <FormContainer>

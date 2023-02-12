@@ -8,9 +8,9 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {
   listProducts,
   deleteProduct,
-  // createProduct
+  createProduct
 } from "../actions/productActions";
-// import {PRODUCT_CREATE_RESET} from "../constants/productConstans";
+import {PRODUCT_CREATE_RESET} from "../constants/productConstans";
 
 
 const ProductListScreen = () => {
@@ -23,8 +23,8 @@ const ProductListScreen = () => {
   const productDelete = useSelector(state => state.productDelete)
   const {loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
 
-  // const productCreate = useSelector(state => state.productCreate)
-  // const {loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct} = productCreate
+  const productCreate = useSelector(state => state.productCreate)
+  const {loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct} = productCreate
 
   const navigate = useNavigate()
   const {id} = useParams()
@@ -33,18 +33,18 @@ const ProductListScreen = () => {
   const {userInfo} = userLogin
 
   useEffect(() => {
-    // dispatch({type: PRODUCT_CREATE_RESET})
+    dispatch({type: PRODUCT_CREATE_RESET})
 
     if(!userInfo.isAdmin){
       navigate('/login')
     }
     dispatch(listProducts())
-    // if (successCreate){
-    //   navigate(`/api/products/edit/${createdProduct._id}`)
-    // } else {
-    //   dispatch(listProducts())
-    // }
-  }, [dispatch, navigate, userInfo, successDelete])//successDelete, successCreate, createdProduct
+    if (successCreate){
+      navigate(`/admin/product/${createdProduct._id}/edit`)
+    } else {
+      dispatch(listProducts())
+    }
+  }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct])
 
   const deleteHandler = (id) => {
     if(window.confirm(`Are you sure to delete product with ${id}?`)){
@@ -53,7 +53,7 @@ const ProductListScreen = () => {
   }
   
   const createProductHandler = () => {
-    // dispatch(createProduct())
+    dispatch(createProduct())
   }
 
   return (
@@ -72,8 +72,8 @@ const ProductListScreen = () => {
       {loadingDelete && <Loader/>}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message> }
 
-      {/*{loadingCreate && <Loader/>}*/}
-      {/*{errorCreate && <Message variant='danger'>{errorCreate}</Message> }*/}
+      {loadingCreate && <Loader/>}
+      {errorCreate && <Message variant='danger'>{errorCreate}</Message> }
 
       {loading
         ? (<Loader/>)
@@ -102,7 +102,7 @@ const ProductListScreen = () => {
                   <td>{product.brand}</td>
 
                   <td>
-                    <LinkContainer to={`/admin/product/edit/${product._id}`}>
+                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
                       <Button variant='light' className='btn-sm'><i className='fas fa-edit'></i></Button>
                     </LinkContainer>
                     <Button variant='danger' className='btn-sm' onClick={() => deleteHandler(product._id)}><i
