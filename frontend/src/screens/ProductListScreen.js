@@ -7,10 +7,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap'
 import {
   listProducts,
-  //deleteProduct,
-  //createProduct
+  deleteProduct,
+  // createProduct
 } from "../actions/productActions";
-import {PRODUCT_CREATE_RESET} from "../constants/productConstans";
+// import {PRODUCT_CREATE_RESET} from "../constants/productConstans";
 
 
 const ProductListScreen = () => {
@@ -23,8 +23,8 @@ const ProductListScreen = () => {
   const productDelete = useSelector(state => state.productDelete)
   const {loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
 
-  const productCreate = useSelector(state => state.productCreate)
-  const {loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct} = productCreate
+  // const productCreate = useSelector(state => state.productCreate)
+  // const {loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct} = productCreate
 
   const navigate = useNavigate()
   const {id} = useParams()
@@ -33,27 +33,27 @@ const ProductListScreen = () => {
   const {userInfo} = userLogin
 
   useEffect(() => {
-    dispatch({type: PRODUCT_CREATE_RESET})
+    // dispatch({type: PRODUCT_CREATE_RESET})
 
     if(!userInfo.isAdmin){
       navigate('/login')
     }
-
-    if (successCreate){
-      navigate(`/api/products/edit/${createdProduct._id}`)
-    } else {
-      dispatch(listProducts())
-    }
-  }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct])
+    dispatch(listProducts())
+    // if (successCreate){
+    //   navigate(`/api/products/edit/${createdProduct._id}`)
+    // } else {
+    //   dispatch(listProducts())
+    // }
+  }, [dispatch, navigate, userInfo, successDelete])//successDelete, successCreate, createdProduct
 
   const deleteHandler = (id) => {
-    // if(window.confirm(`Are you sure to delete product with ${id}?`)){
-    //   dispatch(deleteProduct(id))
-    // }
+    if(window.confirm(`Are you sure to delete product with ${id}?`)){
+      dispatch(deleteProduct(id))
+    }
   }
   
   const createProductHandler = () => {
-    dispatch(createProduct())
+    // dispatch(createProduct())
   }
 
   return (
@@ -72,8 +72,8 @@ const ProductListScreen = () => {
       {loadingDelete && <Loader/>}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message> }
 
-      {loadingCreate && <Loader/>}
-      {errorCreate && <Message variant='danger'>{errorCreate}</Message> }
+      {/*{loadingCreate && <Loader/>}*/}
+      {/*{errorCreate && <Message variant='danger'>{errorCreate}</Message> }*/}
 
       {loading
         ? (<Loader/>)
