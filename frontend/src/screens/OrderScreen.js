@@ -4,7 +4,8 @@ import {Button, Row, Col, Card, Image, ListGroup} from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {useDispatch, useSelector} from "react-redux";
-import {getOrderDetails} from "../actions/orderActions";
+import {getOrderDetails, deliverOrder} from "../actions/orderActions";
+import {ORDER_DELIVER_RESET} from "../constants/orderConstants";
 
 const OrderScreen = () => {
 
@@ -14,16 +15,34 @@ const OrderScreen = () => {
   const {order, error, loading} = orderDetails
   const navigate = useNavigate()
 
+  const orderDeliver = useSelector(state => state.orderDeliver)
+  const {loading: loadingDeliver, success: successDeliver} = orderDeliver
+
+  const userLogin = useSelector(state => state.userLogin)
+  const {userInfo } = userLogin
+
   if(!loading && !error) {
     order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)
   }
 
 
   useEffect(() =>{
-    if(!order || order._id !== Number(id)) {
+    if(!userInfo){
+      navigate('/login')
+    }
+
+    if(!order || order._id !== Number(id) || successDeliver) {
+      dispatch({
+        type: ORDER_DELIVER_RESET
+      })
       dispatch(getOrderDetails(id))
     }
-  }, [dispatch, order, id])
+  }, [dispatch, order, id, successDeliver])
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order))
+  }
+
 
   return loading ? (
     <Loader/>
@@ -153,6 +172,18 @@ const OrderScreen = () => {
               </ListGroup.Item>
 
             </ListGroup>
+            {loadingDeliver && <Loader/>}
+            {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+               <ListGroup.Item className='align-content-center'>
+                 <Button
+                  type='button'
+                  className='btn btn-block'
+                  onClick={deliverHandler}
+                 >
+                   Позначити як доставленно
+                 </Button>
+               </ListGroup.Item>
+            )}
           </Card>
         </Col>
       </Row>
