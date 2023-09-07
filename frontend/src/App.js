@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Example from "./components/NewHeader";
 import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
@@ -17,16 +17,19 @@ import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import OrderListScreen from "./screens/OrderListScreen";
+import PageNotFound from "./screens/PageNotFound";
 
 function App() {
     return (
         <BrowserRouter>
         <div>
-            <Header/>
+            <Example/>
             <main className="py-3">
                 <Container>
                     <Routes>
-                        <Route path='/' element={<HomeScreen/>} />
+                        <Route path='*' element={<PageNotFound />} />
+                        <Route exact path="/" element={<HomeScreen/>} />
+
                         <Route path='/login' element={<LoginScreen/>} />
                         <Route path='/register' element={<RegisterScreen/>} />
                         <Route path='/profile' element={<ProfileScreen/>} />
@@ -52,6 +55,7 @@ function App() {
                         </Route>
 
                         <Route path='/admin/orderlist' element={<OrderListScreen/>} />
+
                     </Routes>
 
                 </Container>
